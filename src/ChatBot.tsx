@@ -17,13 +17,10 @@ import { DNA } from "react-loader-spinner";
 import ChatIcon from "@mui/icons-material/Chat";
 import Fader from "./utils/Fader";
 
-
-
 const OPENAI_APIKEY = import.meta.env.VITE_OPENAI_APIKEY
 
-
+/* https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety */
 async function fetchChat({ content = 'Tell me a joke' }: { content: string }): Promise<string | null> {
-  /* https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety */
   const client = new OpenAI({ apiKey: OPENAI_APIKEY, dangerouslyAllowBrowser: true })
   const response = await client.chat.completions.create({
     model: "gpt-3.5-turbo",
@@ -36,53 +33,46 @@ async function fetchChat({ content = 'Tell me a joke' }: { content: string }): P
   return response.choices[0]?.message?.content
 }
 
-enum ChatType {
-  Discussion = "discussion",
-  RapBattle = "rap battle",
-  LoveBallad = "love ballad",
-  YoMaMa = "yo mamma joke battle",
-}
+const chatTypes = [
+  "discussion",
+  "rap battle",
+  "love ballad",
+  "yo mamma joke battle",
+];
+
+const personHelperText = "A real or fictional person by name or description.";
 
 function ChatBot() {
   const [formData, setFormData] = useState({
     person1: "tupac",
     person2: "trump",
-    chatType: ChatType.Discussion,
+    chatType: "discussion",
   });
-
   const [chatResults, setChatResults] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState(false);
   const [isDebug, setIsDebug] = useState(true);
 
+  /**
+   * Handle form submission and fetch chat results.
+   */
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const { chatType, person1, person2 } = formData;
-
     if (!chatType || !person1 || !person2) {
       setFormError(true)
       return
     }
-
     setFormError(false)
     setIsLoading(true);
 
     const content = `Write ${chatType} between ${person1} and ${person2}`
-    let chatResponse: string | null;
-
-    if (isDebug) {
-      chatResponse = "DEBUG:\n" + JSON.stringify(formData) + "\n" + content;
-    } else {
-      chatResponse = await fetchChat({ content });
-    }
+    const chatResponse = isDebug ? `DEBUG:\n ${JSON.stringify(formData)} \n ${content} ` : await fetchChat({ content });
 
     setIsLoading(false);
     setChatResults(() => chatResponse || "No response");
-
   };
-
-  const personHelperText = "A real or fictional person by name or description.";
 
   return (
     <Paper
@@ -93,7 +83,6 @@ function ChatBot() {
         margin: "5px 10px",
       }}
     >
-
       <Typography variant="h2" gutterBottom>
         <ChatIcon fontSize={"inherit"} /> Chat Bot
       </Typography>
@@ -106,23 +95,17 @@ function ChatBot() {
                 <FormLabel id="demo-radio-buttons-group-label">Chat Type</FormLabel>
                 <RadioGroup
                   row
-                  defaultValue={ChatType.Discussion}
+                  defaultValue={'discussion'}
                   name="radio-buttons-group"
-                  onChange={(e) => {
-                    const selectedChatType = e.target.value as keyof typeof ChatType;
-                    setFormData({ ...formData, chatType: ChatType[selectedChatType] })
-                  }}
+                  onChange={(e) => setFormData({ ...formData, chatType: e.target.value })}
                 >
-                  {(Object.keys(ChatType) as Array<keyof typeof ChatType>).map((key) => (
-                    <FormControlLabel value={key} control={<Radio />} label={ChatType[key]} />
-                  ))}
+                  {chatTypes.map((value) => (<FormControlLabel value={value} control={<Radio />} label={value} />))}
                 </RadioGroup>
 
               </FormControl>
             </Box>
 
-            <br />
-            between <br />
+            <br />between <br />
 
             <TextField
               helperText={personHelperText}
@@ -136,6 +119,7 @@ function ChatBot() {
               variant="outlined"
               error={formError && !formData.person1}
             />
+
             &nbsp;and&nbsp;
 
             <TextField
