@@ -1,4 +1,5 @@
 import { useState } from "react";
+import OpenAI from 'openai';
 import {
   Button,
   Paper,
@@ -15,8 +16,25 @@ import {
 import { DNA } from "react-loader-spinner";
 import ChatIcon from "@mui/icons-material/Chat";
 import Fader from "./utils/Fader";
-import { fetchChat } from "./utils/dataFunctions"
 
+
+
+const OPENAI_APIKEY = import.meta.env.VITE_OPENAI_APIKEY
+
+
+async function fetchChat({ content = 'Tell me a joke' }: { content: string }): Promise<string | null> {
+  /* https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety */
+  const client = new OpenAI({ apiKey: OPENAI_APIKEY, dangerouslyAllowBrowser: true })
+  const response = await client.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      { role: "user", content },
+    ],
+    temperature: 0.8,
+    max_tokens: 1024,
+  });
+  return response.choices[0]?.message?.content
+}
 
 enum ChatType {
   Discussion = "discussion",

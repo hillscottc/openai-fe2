@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import type * as CSS from 'csstype';
 
 
-const fadeInStyle: CSS.Properties  = {
+const fadeInStyle: CSS.Properties = {
   transition: 'opacity 1s ease'
 }
 
-const fadeOutStyle: CSS.Properties  = {
+const fadeOutStyle: CSS.Properties = {
   opacity: 0,
   transition: 'opacity 1s ease'
 }
@@ -17,7 +17,7 @@ interface Props {
 
 const Fader: React.FunctionComponent<Props> = (props) => {
 
-  const [fadeState, setFadeState] = useState<{fade: "fade-in" | "fade-out"}>({
+  const [fadeState, setFadeState] = useState<{ fade: "fade-in" | "fade-out" }>({
     fade: "fade-in",
   });
 
