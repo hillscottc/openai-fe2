@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import { DNA } from "react-loader-spinner";
 import ChatIcon from "@mui/icons-material/Chat";
-import Fader from "./utils/Fader";
 
 const OPENAI_APIKEY = import.meta.env.VITE_OPENAI_APIKEY
 
@@ -37,7 +36,6 @@ const chatTypes = [
   "discussion",
   "rap battle",
   "love ballad",
-  "yo mamma joke battle",
 ];
 
 const personHelperText = "A real or fictional person by name or description.";
@@ -161,10 +159,6 @@ function ChatBot() {
               wrapperStyle={{}}
               wrapperClass="dna-wrapper"
             />
-          </div>
-          <div className="col col-2">
-            <Fader text="Working"></Fader>
-            {/*<Fader text={getJargon()}></Fader>*/}
           </div>
         </div>
       )}

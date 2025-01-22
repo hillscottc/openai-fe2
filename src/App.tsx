@@ -1,14 +1,20 @@
-import './App.css'
+import * as React from 'react';
 import ChatBot from './ChatBot'
+import Paper from '@mui/material/Paper'
+import CssBaseline from '@mui/material/CssBaseline';
+import ProTip from './components/Tip';
+import Copyright from './components/Copyright';
 
-function App() {
+
+export default function App() {
   return (
-    <>
-      <div>
+    <React.Fragment>
+      <CssBaseline enableColorScheme />
+      <Paper elevation={8} variant="outlined" >
         <ChatBot />
-      </div>
-    </>
+        <ProTip />
+        <Copyright />
+      </Paper>
+    </React.Fragment>
   )
 }
-
-export default App
