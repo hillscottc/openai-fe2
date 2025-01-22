@@ -16,11 +16,10 @@ import {
 import { DNA } from "react-loader-spinner";
 import ChatIcon from "@mui/icons-material/Chat";
 
-const OPENAI_APIKEY = import.meta.env.VITE_OPENAI_APIKEY
 
 /* https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety */
-async function fetchChat({ content = 'Tell me a joke' }: { content: string }): Promise<string | null> {
-  const client = new OpenAI({ apiKey: OPENAI_APIKEY, dangerouslyAllowBrowser: true })
+async function fetchChat({ content = 'Tell me a joke', apiKey = '' }: { content: string, apiKey: string }): Promise<string | null> {
+  const client = new OpenAI({ apiKey: apiKey, dangerouslyAllowBrowser: true })
   const response = await client.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
@@ -45,11 +44,12 @@ function ChatBot() {
     person1: "tupac",
     person2: "trump",
     chatType: "discussion",
+    apiKey: ''
   });
   const [chatResults, setChatResults] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState(false);
-  const [isDebug, setIsDebug] = useState(true);
+  const [isDebug, setIsDebug] = useState(false);
 
   /**
    * Handle form submission and fetch chat results.
@@ -57,19 +57,33 @@ function ChatBot() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { chatType, person1, person2 } = formData;
-    if (!chatType || !person1 || !person2) {
+    const { chatType, person1, person2, apiKey } = formData;
+    if (!chatType || !person1 || !person2 || !apiKey) {
       setFormError(true)
+      setChatResults("Please fill out all fields.")
       return
     }
     setFormError(false)
-    setIsLoading(true);
 
     const content = `Write ${chatType} between ${person1} and ${person2}`
-    const chatResponse = isDebug ? `DEBUG:\n ${JSON.stringify(formData)} \n ${content} ` : await fetchChat({ content });
+    // const apiKey = import.meta.env.VITE_OPENAI_APIKEY
 
-    setIsLoading(false);
-    setChatResults(() => chatResponse || "No response");
+    if (isDebug) {
+      setChatResults(`DEBUG:\n ${JSON.stringify(formData)} \n ${content}`);
+      return
+    }
+
+    try {
+      setIsLoading(true);
+      setChatResults("Thinking...");
+      const chatResponse = await fetchChat({ content, apiKey });
+      setChatResults(() => chatResponse || "No response");
+      setIsLoading(false);
+    } catch (error) {
+      setChatResults(`Error: ${error}`);
+      setIsLoading(false);
+    }
+
   };
 
   return (
@@ -89,6 +103,17 @@ function ChatBot() {
         <div>
           <Typography variant="subtitle1" gutterBottom>
             <Box sx={{ minWidth: 120 }}>
+
+              <TextField
+                helperText={'chapt gpt open ai api key'}
+                size="small"
+                onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
+                value={formData.apiKey}
+                fullWidth
+                label={"api key"}
+                variant="outlined"
+              />
+
               <FormControl fullWidth>
                 <FormLabel id="demo-radio-buttons-group-label">Chat Type</FormLabel>
                 <RadioGroup
@@ -97,7 +122,7 @@ function ChatBot() {
                   name="radio-buttons-group"
                   onChange={(e) => setFormData({ ...formData, chatType: e.target.value })}
                 >
-                  {chatTypes.map((value) => (<FormControlLabel value={value} control={<Radio />} label={value} />))}
+                  {chatTypes.map((value) => (<FormControlLabel value={value} key={value} control={<Radio />} label={value} />))}
                 </RadioGroup>
 
               </FormControl>
@@ -136,38 +161,46 @@ function ChatBot() {
         </div>
         <br />
 
+        <Button variant="contained" type="submit" sx={{ marginRight: 50 }}>
+          GO !
+        </Button>
+
         <FormControlLabel
           control={<Checkbox
             checked={isDebug}
+            sx={{ fontSize: 6 }}
             onChange={() => setIsDebug(!isDebug)}
-          />} label="Debug" />
+          />}
+          label={<Typography variant="body2" color="textSecondary">Debug</Typography>}
+        />
 
-        <Button variant="contained" type="submit">
-          GO !
-        </Button>
       </form>
 
-      {isLoading && (
-        <div className="container-grid">
-          <div className="col col-1">
-            {/* Loading spinner */}
-            <DNA
-              visible={isLoading}
-              height="80"
-              width="80"
-              ariaLabel="dna-loading"
-              wrapperStyle={{}}
-              wrapperClass="dna-wrapper"
-            />
+      {
+        isLoading && (
+          <div className="container-grid">
+            <div className="col col-1">
+              {/* Loading spinner */}
+              <DNA
+                visible={isLoading}
+                height="80"
+                width="80"
+                ariaLabel="dna-loading"
+                wrapperStyle={{}}
+                wrapperClass="dna-wrapper"
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       <br />
-      {chatResults && (
-        <textarea value={chatResults} rows={30} cols={75} readOnly />
-      )}
-    </Paper>
+      {
+        chatResults && (
+          <textarea value={chatResults} rows={30} cols={75} readOnly />
+        )
+      }
+    </Paper >
   );
 }
 
