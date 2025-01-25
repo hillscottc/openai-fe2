@@ -1,10 +1,8 @@
 # React + TypeScript + Vite
 
-
 - csstype : provides a handy type def for react-style css properties
 
 - Uses [MUI's vite template](https://github.com/mui/material-ui/tree/master/examples/material-ui-vite-ts).
-
 
 ## OPENAI API KEY
 

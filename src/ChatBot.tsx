@@ -1,5 +1,5 @@
 import { useState } from "react";
-import OpenAI from 'openai';
+import OpenAI from "openai";
 import {
   Button,
   Paper,
@@ -9,68 +9,79 @@ import {
   Box,
   Checkbox,
   FormControlLabel,
-  FormLabel,
   RadioGroup,
-  Radio
+  Radio,
 } from "@mui/material";
 import { DNA } from "react-loader-spinner";
 import ChatIcon from "@mui/icons-material/Chat";
 
-
 /* https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety */
-async function fetchChat({ content = 'Tell me a joke', apiKey = '' }: { content: string, apiKey: string }): Promise<string | null> {
-  const client = new OpenAI({ apiKey: apiKey, dangerouslyAllowBrowser: true })
+async function fetchChat({
+  content = "Tell me a joke",
+  apiKey = "",
+}: {
+  content: string;
+  apiKey: string;
+}): Promise<string | null> {
+  const client = new OpenAI({ apiKey: apiKey, dangerouslyAllowBrowser: true });
   const response = await client.chat.completions.create({
     model: "gpt-3.5-turbo",
-    messages: [
-      { role: "user", content },
-    ],
+    messages: [{ role: "user", content }],
     temperature: 0.8,
     max_tokens: 1024,
   });
-  return response.choices[0]?.message?.content
+  return response.choices[0]?.message?.content;
 }
 
-const chatTypes = [
-  "discussion",
-  "rap battle",
-  "love ballad",
-];
+const chatTypes = ["discussion", "rap battle", "love ballad"];
 
 const personHelperText = "A real or fictional person by name or description.";
 
+const sampleItems = [
+  "Trump",
+  "Tupac",
+  "Liz Taylor",
+  "Ghandi",
+  "a cat",
+  "Dracula",
+  "Obama",
+  "Churchill",
+  "a gangster",
+  "Malcolm X",
+  "Homer Simpson",
+  "Eric Cartman",
+  "Taylor Swift",
+];
+
 function ChatBot() {
   const [formData, setFormData] = useState({
-    person1: "tupac",
-    person2: "trump",
+    person1: "",
+    person2: "",
     chatType: "discussion",
-    apiKey: ''
+    apiKey: import.meta.env.VITE_OPENAI_APIKEY || "",
+    password: "",
   });
   const [chatResults, setChatResults] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState(false);
   const [isDebug, setIsDebug] = useState(false);
 
-  /**
-   * Handle form submission and fetch chat results.
-   */
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const { chatType, person1, person2, apiKey } = formData;
     if (!chatType || !person1 || !person2 || !apiKey) {
-      setFormError(true)
-      setChatResults("Please fill out all fields.")
-      return
+      setFormError(true);
+      setChatResults("Please fill out all fields.");
+      return;
     }
-    setFormError(false)
+    setFormError(false);
 
-    const content = `Write ${chatType} between ${person1} and ${person2}`
-    // const apiKey = import.meta.env.VITE_OPENAI_APIKEY
+    const content = `Write ${chatType} between ${person1} and ${person2}`;
 
     if (isDebug) {
       setChatResults(`DEBUG:\n ${JSON.stringify(formData)} \n ${content}`);
-      return
+      return;
     }
 
     try {
@@ -83,7 +94,6 @@ function ChatBot() {
       setChatResults(`Error: ${error}`);
       setIsLoading(false);
     }
-
   };
 
   return (
@@ -100,65 +110,131 @@ function ChatBot() {
       </Typography>
 
       <form onSubmit={handleSubmit}>
-        <div>
-          <Typography variant="subtitle1" gutterBottom>
-            <Box sx={{ minWidth: 120 }}>
+        <TextField
+          size="small"
+          onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
+          value={formData.apiKey}
+          fullWidth
+          label={"encrypted key"}
+          variant="outlined"
+          sx={{ marginBottom: "15px" }}
+          type="password"
+          error={formError && !formData.apiKey}
+        />
 
-              <TextField
-                helperText={'chapt gpt open ai api key'}
-                size="small"
-                onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
-                value={formData.apiKey}
-                fullWidth
-                label={"api key"}
-                variant="outlined"
-              />
+        <Box sx={{ minWidth: 120, marginBottom: "25px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              p: 1,
+              m: 1,
+            }}
+          >
+            <Typography variant="h4" gutterBottom>
+              Create an interaction between any two people
+            </Typography>
+          </Box>
 
-              <FormControl fullWidth>
-                <FormLabel id="demo-radio-buttons-group-label">Chat Type</FormLabel>
-                <RadioGroup
-                  row
-                  defaultValue={'discussion'}
-                  name="radio-buttons-group"
-                  onChange={(e) => setFormData({ ...formData, chatType: e.target.value })}
-                >
-                  {chatTypes.map((value) => (<FormControlLabel value={value} key={value} control={<Radio />} label={value} />))}
-                </RadioGroup>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              p: 1,
+              m: 1,
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Interaction Type
+            </Typography>
+          </Box>
 
-              </FormControl>
-            </Box>
-
-            <br />between <br />
-
-            <TextField
-              helperText={personHelperText}
-              size="small"
-              onChange={(e) =>
-                setFormData({ ...formData, person1: e.target.value })
-              }
-              value={formData.person1}
-              fullWidth
-              label={"Person"}
-              variant="outlined"
-              error={formError && !formData.person1}
-            />
-
-            &nbsp;and&nbsp;
-
-            <TextField
-              helperText={personHelperText}
-              size="small"
-              onChange={(e) =>
-                setFormData({ ...formData, person2: e.target.value })
-              }
-              value={formData.person2}
-              fullWidth
-              label={"Person"}
-              variant="outlined"
-              error={formError && !formData.person2}
-            />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "50px",
+            }}
+          >
+            <FormControl>
+              <RadioGroup
+                row
+                defaultValue={"discussion"}
+                name="radio-buttons-group"
+                onChange={(e) =>
+                  setFormData({ ...formData, chatType: e.target.value })
+                }
+              >
+                {chatTypes.map((value) => (
+                  <FormControlLabel
+                    value={value}
+                    key={value}
+                    control={<Radio />}
+                    label={value}
+                    labelPlacement="bottom"
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "3px",
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Choose two people or things to interact with each other
           </Typography>
-        </div>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "20px",
+          }}
+        >
+          <Typography variant="caption" gutterBottom maxWidth="75%">
+            It can be anybody, or anything, as long as they can interact. For
+            example:&nbsp;
+            {sampleItems.map((item) => `${item}, `)} etc. Go crazy.
+          </Typography>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <TextField
+            helperText={personHelperText}
+            size="small"
+            onChange={(e) =>
+              setFormData({ ...formData, person1: e.target.value })
+            }
+            value={formData.person1}
+            label={"Person"}
+            variant="outlined"
+            error={formError && !formData.person1}
+            sx={{ paddingRight: "10px" }}
+          />
+          <TextField
+            helperText={personHelperText}
+            size="small"
+            onChange={(e) =>
+              setFormData({ ...formData, person2: e.target.value })
+            }
+            value={formData.person2}
+            label={"Person"}
+            variant="outlined"
+            error={formError && !formData.person2}
+          />
+        </Box>
+
         <br />
 
         <Button variant="contained" type="submit" sx={{ marginRight: 50 }}>
@@ -166,41 +242,42 @@ function ChatBot() {
         </Button>
 
         <FormControlLabel
-          control={<Checkbox
-            checked={isDebug}
-            sx={{ fontSize: 6 }}
-            onChange={() => setIsDebug(!isDebug)}
-          />}
-          label={<Typography variant="body2" color="textSecondary">Debug</Typography>}
+          control={
+            <Checkbox
+              checked={isDebug}
+              sx={{ fontSize: 6 }}
+              onChange={() => setIsDebug(!isDebug)}
+            />
+          }
+          label={
+            <Typography variant="body2" color="textSecondary">
+              Debug
+            </Typography>
+          }
         />
-
       </form>
 
-      {
-        isLoading && (
-          <div className="container-grid">
-            <div className="col col-1">
-              {/* Loading spinner */}
-              <DNA
-                visible={isLoading}
-                height="80"
-                width="80"
-                ariaLabel="dna-loading"
-                wrapperStyle={{}}
-                wrapperClass="dna-wrapper"
-              />
-            </div>
+      {isLoading && (
+        <div className="container-grid">
+          <div className="col col-1">
+            {/* Loading spinner */}
+            <DNA
+              visible={isLoading}
+              height="80"
+              width="80"
+              ariaLabel="dna-loading"
+              wrapperStyle={{}}
+              wrapperClass="dna-wrapper"
+            />
           </div>
-        )
-      }
+        </div>
+      )}
 
       <br />
-      {
-        chatResults && (
-          <textarea value={chatResults} rows={30} cols={75} readOnly />
-        )
-      }
-    </Paper >
+      {chatResults && (
+        <textarea value={chatResults} rows={30} cols={75} readOnly />
+      )}
+    </Paper>
   );
 }
 

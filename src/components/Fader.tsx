@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
-import type * as CSS from 'csstype';
-
+import type * as CSS from "csstype";
 
 const fadeInStyle: CSS.Properties = {
-  transition: 'opacity 1s ease'
-}
+  transition: "opacity 1s ease",
+};
 
 const fadeOutStyle: CSS.Properties = {
   opacity: 0,
-  transition: 'opacity 1s ease'
-}
+  transition: "opacity 1s ease",
+};
 
 interface Props {
   text: string;
 }
 
 const Fader: React.FunctionComponent<Props> = (props) => {
-
   const [fadeState, setFadeState] = useState<{ fade: "fade-in" | "fade-out" }>({
     fade: "fade-in",
   });
@@ -40,7 +38,10 @@ const Fader: React.FunctionComponent<Props> = (props) => {
 
   return (
     <>
-      <h1 data-testid="fader" style={fadeState.fade === 'fade-in' ? fadeInStyle : fadeOutStyle}>
+      <h1
+        data-testid="fader"
+        style={fadeState.fade === "fade-in" ? fadeInStyle : fadeOutStyle}
+      >
         {props.text}
       </h1>
     </>
