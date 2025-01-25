@@ -101,27 +101,17 @@ function ChatBot() {
       style={{
         display: "grid",
         gridRowGap: "20px",
-        padding: "20px",
-        margin: "5px 10px",
+        padding: "1px",
+        margin: "1px",
+        backgroundColor: "#f0f0f0",
+        height: "100%",
       }}
     >
-      <Typography variant="h2" gutterBottom>
+      <Typography variant="h2" margin="10px" border="10px">
         <ChatIcon fontSize={"inherit"} /> ConvoComposer
       </Typography>
 
       <form onSubmit={handleSubmit}>
-        <TextField
-          size="small"
-          onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
-          value={formData.apiKey}
-          fullWidth
-          label={"encrypted key"}
-          variant="outlined"
-          sx={{ marginBottom: "15px" }}
-          type="password"
-          error={formError && !formData.apiKey}
-        />
-
         <Box sx={{ minWidth: 120, marginBottom: "25px" }}>
           <Box
             sx={{
@@ -132,7 +122,7 @@ function ChatBot() {
             }}
           >
             <Typography variant="h4" gutterBottom>
-              Create an interaction between any two people
+              Use AI to create an interaction between any two people
             </Typography>
           </Box>
 
@@ -234,6 +224,18 @@ function ChatBot() {
             error={formError && !formData.person2}
           />
         </Box>
+
+        <TextField
+          size="small"
+          onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
+          value={formData.apiKey}
+          fullWidth
+          label={"encrypted key"}
+          variant="outlined"
+          sx={{ margin: "20px" }}
+          type="password"
+          error={formError && !formData.apiKey}
+        />
 
         <br />
 
