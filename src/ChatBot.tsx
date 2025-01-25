@@ -106,7 +106,7 @@ function ChatBot() {
       }}
     >
       <Typography variant="h2" gutterBottom>
-        <ChatIcon fontSize={"inherit"} /> Chat Bot
+        <ChatIcon fontSize={"inherit"} /> ConvoComposer
       </Typography>
 
       <form onSubmit={handleSubmit}>
