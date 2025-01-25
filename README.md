@@ -1,16 +1,7 @@
-# React + TypeScript + Vite
+# ConvoComposer
 
-- csstype : provides a handy type def for react-style css properties
+A demo project by Scott C. Hill
 
-- Uses [MUI's vite template](https://github.com/mui/material-ui/tree/master/examples/material-ui-vite-ts).
+A frontend app in [React](https://react.dev/) + [Typescript](https://www.typescriptlang.org/) + [Vite](https://vite.dev/)
 
-## OPENAI API KEY
-
-- Requires the open api key to be set as an environment variable, typically in a `.env` file.
-
-```
-# .env
-VITE_OPENAI_APIKEY=???
-```
-
-- Consider moving apikey to backend? [best practice docs](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety)
+It uses the [OpenAI API Platform](https://openai.com/api/). You'll need to [generate and use your own api key](https://platform.openai.com/docs/quickstart) if Scott won't lend you his.
