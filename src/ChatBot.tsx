@@ -15,6 +15,8 @@ import {
 import { DNA } from "react-loader-spinner";
 import ChatIcon from "@mui/icons-material/Chat";
 
+const API_KEY = import.meta.env.VITE_OPENAI_APIKEY || "";
+
 /* https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety */
 async function fetchChat({
   content = "Tell me a joke",
@@ -58,19 +60,16 @@ function ChatBot() {
     person1: "",
     person2: "",
     chatType: "discussion",
-    apiKey: import.meta.env.VITE_OPENAI_APIKEY || "",
-    password: "",
   });
   const [chatResults, setChatResults] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [formError, setFormError] = useState(false);
-  const [isDebug, setIsDebug] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { chatType, person1, person2, apiKey } = formData;
-    if (!chatType || !person1 || !person2 || !apiKey) {
+    const { chatType, person1, person2 } = formData;
+    if (!chatType || !person1 || !person2) {
       setFormError(true);
       setChatResults("Please fill out all fields.");
       return;
@@ -79,15 +78,10 @@ function ChatBot() {
 
     const content = `Write ${chatType} between ${person1} and ${person2}`;
 
-    if (isDebug) {
-      setChatResults(`DEBUG:\n ${JSON.stringify(formData)} \n ${content}`);
-      return;
-    }
-
     try {
       setIsLoading(true);
       setChatResults("Thinking...");
-      const chatResponse = await fetchChat({ content, apiKey });
+      const chatResponse = await fetchChat({ content, apiKey: API_KEY });
       setChatResults(() => chatResponse || "No response");
       setIsLoading(false);
     } catch (error) {
@@ -113,27 +107,13 @@ function ChatBot() {
 
       <form onSubmit={handleSubmit}>
         <Box sx={{ minWidth: 120, marginBottom: "25px" }}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              p: 1,
-              m: 1,
-            }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "center", p: 1, m: 1 }}>
             <Typography variant="h4" gutterBottom>
               Use AI to create an interaction between any two people
             </Typography>
           </Box>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              p: 1,
-              m: 1,
-            }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "center", p: 1, m: 1 }}>
             <Typography variant="h6" gutterBottom>
               Interaction Type
             </Typography>
@@ -182,24 +162,25 @@ function ChatBot() {
 
         <Box
           sx={{
-            display: "flex",
+            display: "grid",
             justifyContent: "center",
             marginBottom: "20px",
           }}
         >
-          <Typography variant="caption" gutterBottom maxWidth="75%">
-            It can be anybody, or anything, as long as they can interact. For
-            example:&nbsp;
+          <Typography
+            variant="caption"
+            gutterBottom
+            sx={{ textAlign: "center" }}
+          >
+            It can be anybody, or anything, as long as they can interact.
+          </Typography>
+          <Typography variant="caption" gutterBottom>
+            For example:&nbsp;
             {sampleItems.map((item) => `${item}, `)} etc. Go crazy.
           </Typography>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
           <TextField
             helperText={personHelperText}
             size="small"
@@ -225,38 +206,13 @@ function ChatBot() {
           />
         </Box>
 
-        <TextField
-          size="small"
-          onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
-          value={formData.apiKey}
-          fullWidth
-          label={"encrypted key"}
-          variant="outlined"
-          sx={{ margin: "20px" }}
-          type="password"
-          error={formError && !formData.apiKey}
-        />
-
         <br />
 
-        <Button variant="contained" type="submit" sx={{ marginRight: 50 }}>
-          GO !
-        </Button>
-
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={isDebug}
-              sx={{ fontSize: 6 }}
-              onChange={() => setIsDebug(!isDebug)}
-            />
-          }
-          label={
-            <Typography variant="body2" color="textSecondary">
-              Debug
-            </Typography>
-          }
-        />
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Button variant="contained" type="submit" sx={{ width: "250px" }}>
+            GO !
+          </Button>
+        </Box>
       </form>
 
       {isLoading && (
