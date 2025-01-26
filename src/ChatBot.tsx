@@ -7,7 +7,6 @@ import {
   FormControl,
   TextField,
   Box,
-  Checkbox,
   FormControlLabel,
   RadioGroup,
   Radio,
