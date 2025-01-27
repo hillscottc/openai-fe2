@@ -36,8 +36,6 @@ async function fetchChat({
 
 const chatTypes = ["discussion", "rap battle", "love ballad"];
 
-const personHelperText = "A real or fictional person by name or description.";
-
 const sampleItems = [
   "Trump",
   "Tupac",
@@ -92,13 +90,13 @@ function ChatBot() {
   return (
     <Paper
       elevation={8}
-      style={{
-        // use sx?
+      sx={{
         display: "flex",
         flexDirection: "column",
-        padding: "10px",
-        margin: "20px",
+        padding: "5px",
+        margin: "10px",
         backgroundColor: "#f0f0f0",
+        height: "100%",
       }}
     >
       <Typography variant="h1" margin="10px" border="10px">
@@ -110,12 +108,6 @@ function ChatBot() {
           <Box sx={{ display: "flex", justifyContent: "center", p: 1, m: 1 }}>
             <Typography variant="h4" gutterBottom>
               Use AI to create an interaction between any two people
-            </Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", justifyContent: "center", p: 1, m: 1 }}>
-            <Typography variant="h6" gutterBottom>
-              Interaction Type
             </Typography>
           </Box>
 
@@ -140,7 +132,7 @@ function ChatBot() {
                     value={value}
                     key={value}
                     control={<Radio />}
-                    label={value}
+                    label={<Typography variant="h6">{value}</Typography>}
                     labelPlacement="bottom"
                   />
                 ))}
@@ -155,8 +147,8 @@ function ChatBot() {
             marginBottom: "3px",
           }}
         >
-          <Typography variant="h6" gutterBottom>
-            Choose two people or things to interact with each other
+          <Typography variant="h5" gutterBottom>
+            Choose two people
           </Typography>
         </Box>
 
@@ -164,17 +156,13 @@ function ChatBot() {
           sx={{
             display: "grid",
             justifyContent: "center",
-            marginBottom: "20px",
+            marginBottom: "5px",
           }}
         >
-          <Typography
-            variant="caption"
-            gutterBottom
-            sx={{ textAlign: "center" }}
-          >
-            It can be anybody, or anything, as long as they can interact.
+          <Typography variant="body1" gutterBottom sx={{ textAlign: "center" }}>
+            Enter two people or things that can interact.
           </Typography>
-          <Typography variant="caption" gutterBottom>
+          <Typography variant="body2" gutterBottom>
             For example:&nbsp;
             {sampleItems.map((item) => `${item}, `)} etc. Go crazy.
           </Typography>
@@ -182,26 +170,24 @@ function ChatBot() {
 
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <TextField
-            helperText={personHelperText}
             size="small"
             onChange={(e) =>
               setFormData({ ...formData, person1: e.target.value })
             }
             value={formData.person1}
-            label={"Person"}
-            variant="outlined"
+            label={"Person 1"}
+            variant="filled"
             error={formError && !formData.person1}
             sx={{ paddingRight: "10px" }}
           />
           <TextField
-            helperText={personHelperText}
             size="small"
             onChange={(e) =>
               setFormData({ ...formData, person2: e.target.value })
             }
             value={formData.person2}
-            label={"Person"}
-            variant="outlined"
+            label={"Person 2"}
+            variant="filled"
             error={formError && !formData.person2}
           />
         </Box>
