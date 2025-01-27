@@ -13,6 +13,7 @@ import {
   TextareaAutosize,
   FormHelperText,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { DNA as DNASpinner } from "react-loader-spinner";
 
 const API_KEY = import.meta.env.VITE_OPENAI_APIKEY || "";
@@ -60,11 +61,11 @@ const sampleItems = [
   "Taylor Swift",
 ];
 
-const ChatBot: React.FunctionComponent = () => {
+const Konvo: React.FunctionComponent = () => {
   const [formData, setFormData] = useState({
     person1: "",
     person2: "",
-    chatType: "",
+    chatType: "rap battle",
   });
   const [chatResults, setChatResults] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -108,50 +109,60 @@ const ChatBot: React.FunctionComponent = () => {
         // height: "100vh",
       }}
     >
-      <Typography variant="h1" margin="10px" border="10px">
-        ConvoComposer
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Typography variant="h1">KONVO AI</Typography>
+      </Box>
 
       <form onSubmit={handleSubmit}>
-        <Box sx={{ minWidth: 120, marginBottom: "25px" }}>
-          <Box sx={{ display: "flex", justifyContent: "center", p: 1, m: 1 }}>
-            <Typography variant="h4" gutterBottom>
-              Use AI to create an interaction between any two people
-            </Typography>
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: "50px",
-            }}
-          >
-            <FormControl error={formError && !formData.chatType}>
-              <RadioGroup
-                row
-                defaultValue={"discussion"}
-                name="radio-buttons-group"
-                onChange={(e) =>
-                  setFormData({ ...formData, chatType: e.target.value })
-                }
-              >
-                {chatTypes.map((value) => (
-                  <FormControlLabel
-                    value={value}
-                    key={value}
-                    control={<Radio />}
-                    label={<Typography variant="h5">{value}</Typography>}
-                    labelPlacement="bottom"
-                  />
-                ))}
-              </RadioGroup>
-              <FormHelperText>
-                {!formData.chatType && "Please select an option."}
-              </FormHelperText>
-            </FormControl>
-          </Box>
+        <Box sx={{ display: "flex", justifyContent: "center", p: 1, m: 1 }}>
+          <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
+            Create an interaction!
+          </Typography>
         </Box>
+
+        <Box
+          sx={{ display: "flex", justifyContent: "center", marginBottom: 4 }}
+        >
+          <FormControl>
+            <RadioGroup
+              row
+              defaultValue={"rap battle"}
+              name="radio-buttons-group"
+              onChange={(e) =>
+                setFormData({ ...formData, chatType: e.target.value })
+              }
+            >
+              <Box sx={{ flexGrow: 1 }}>
+                <Grid container spacing={2} minHeight={160} columns={2}>
+                  {chatTypes.map((value) => (
+                    <Grid
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      sx={{
+                        borderRadius: 2,
+                        backgroundColor: "grey.300",
+                        width: 100,
+                      }}
+                    >
+                      <FormControlLabel
+                        value={value}
+                        key={value}
+                        control={<Radio />}
+                        label={<Typography variant="body1">{value}</Typography>}
+                        labelPlacement="bottom"
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            </RadioGroup>
+            <FormHelperText>
+              {!formData.chatType && "Please select an option."}
+            </FormHelperText>
+          </FormControl>
+        </Box>
+
         <Box
           sx={{
             display: "flex",
@@ -174,7 +185,7 @@ const ChatBot: React.FunctionComponent = () => {
           <Typography variant="body1" gutterBottom sx={{ textAlign: "center" }}>
             Enter two people or things that can interact.
           </Typography>
-          <Typography variant="body2" gutterBottom>
+          <Typography variant="body1" gutterBottom>
             For example:&nbsp;
             {sampleItems.map((item) => `${item}, `)} etc. Go crazy.
           </Typography>
@@ -190,7 +201,7 @@ const ChatBot: React.FunctionComponent = () => {
             label={"Person 1"}
             variant="filled"
             error={formError && !formData.person1}
-            sx={{ paddingRight: "10px" }}
+            sx={{ paddingRight: 1 }}
           />
           <TextField
             size="small"
@@ -232,4 +243,4 @@ const ChatBot: React.FunctionComponent = () => {
   );
 };
 
-export default ChatBot;
+export default Konvo;

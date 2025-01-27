@@ -1,5 +1,5 @@
 import * as React from "react";
-import ChatBot from "./ChatBot";
+import Konvo from "./Konvo";
 import CssBaseline from "@mui/material/CssBaseline";
 import Footer from "./components/Footer";
 import Container from "@mui/material/Container";
@@ -12,7 +12,7 @@ const App: React.FunctionComponent = () => {
       <React.Fragment>
         <CssBaseline enableColorScheme />
         <Container component="main">
-          <ChatBot />
+          <Konvo />
         </Container>
         <Footer />
       </React.Fragment>
