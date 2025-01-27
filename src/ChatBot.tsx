@@ -101,7 +101,7 @@ function ChatBot() {
         backgroundColor: "#f0f0f0",
       }}
     >
-      <Typography variant="h2" margin="10px" border="10px">
+      <Typography variant="h1" margin="10px" border="10px">
         <ChatIcon fontSize={"inherit"} /> ConvoComposer
       </Typography>
 

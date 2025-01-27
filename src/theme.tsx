@@ -1,7 +1,7 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, responsiveFontSizes } from "@mui/material/styles";
 import { red } from "@mui/material/colors";
 
-const theme = createTheme({
+let theme = createTheme({
   cssVariables: true,
   palette: {
     primary: {
@@ -14,6 +14,11 @@ const theme = createTheme({
       main: red.A400,
     },
   },
+  typography: {
+    fontSize: 10,
+  },
 });
+
+theme = responsiveFontSizes(theme);
 
 export default theme;
