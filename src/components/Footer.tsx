@@ -8,12 +8,11 @@ const Footer: React.FunctionComponent = () => {
         align="center"
         sx={{ color: "text.secondary" }}
       >
-        A demo project by&nbsp; Scott C Hill, source code available&nbsp;
+        &nbsp; Scott C Hill ,{" ©"}
+        {new Date().getFullYear()},&nbsp;
         <Link color="inherit" href="https://github.com/hillscottc/openai-fe2">
-          on GitHub
+          source
         </Link>
-        ,{" Copyright © "}
-        {new Date().getFullYear()}
       </Typography>
     </Box>
   );

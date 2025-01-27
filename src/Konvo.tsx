@@ -51,12 +51,10 @@ const sampleItems = [
   "Liz Taylor",
   "Ghandi",
   "a cat",
-  "Dracula",
   "Obama",
   "Churchill",
   "a gangster",
   "Malcolm X",
-  "Homer Simpson",
   "Eric Cartman",
   "Taylor Swift",
 ];
@@ -66,6 +64,7 @@ const Konvo: React.FunctionComponent = () => {
     person1: "",
     person2: "",
     chatType: "rap battle",
+    topic: "",
   });
   const [chatResults, setChatResults] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -74,7 +73,7 @@ const Konvo: React.FunctionComponent = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { chatType, person1, person2 } = formData;
+    const { chatType, person1, person2, topic } = formData;
     if (!chatType || !person1 || !person2) {
       setFormError(true);
       setChatResults("Please fill out all fields.");
@@ -82,7 +81,8 @@ const Konvo: React.FunctionComponent = () => {
     }
     setFormError(false);
 
-    const content = `Write ${chatType} between ${person1} and ${person2}`;
+    let content = `Write ${chatType} between ${person1} and ${person2}`;
+    if (topic) content += ` with a topic of ${topic}`;
 
     try {
       setIsLoading(true);
@@ -119,7 +119,6 @@ const Konvo: React.FunctionComponent = () => {
             Create an interaction!
           </Typography>
         </Box>
-
         <Box
           sx={{ display: "flex", justifyContent: "center", marginBottom: 4 }}
         >
@@ -133,7 +132,12 @@ const Konvo: React.FunctionComponent = () => {
               }
             >
               <Box sx={{ flexGrow: 1 }}>
-                <Grid container spacing={2} minHeight={160} columns={2}>
+                <Grid
+                  container
+                  spacing={1}
+                  columns={3}
+                  sx={{ justifyContent: "center" }}
+                >
                   {chatTypes.map((value) => (
                     <Grid
                       display="flex"
@@ -149,7 +153,11 @@ const Konvo: React.FunctionComponent = () => {
                         value={value}
                         key={value}
                         control={<Radio />}
-                        label={<Typography variant="body1">{value}</Typography>}
+                        label={
+                          <Typography variant="button" sx={{ m: 0, p: 0 }}>
+                            {value}
+                          </Typography>
+                        }
                         labelPlacement="bottom"
                       />
                     </Grid>
@@ -162,7 +170,6 @@ const Konvo: React.FunctionComponent = () => {
             </FormHelperText>
           </FormControl>
         </Box>
-
         <Box
           sx={{
             display: "flex",
@@ -174,7 +181,6 @@ const Konvo: React.FunctionComponent = () => {
             Choose two people
           </Typography>
         </Box>
-
         <Box
           sx={{
             display: "grid",
@@ -187,10 +193,9 @@ const Konvo: React.FunctionComponent = () => {
           </Typography>
           <Typography variant="body1" gutterBottom>
             For example:&nbsp;
-            {sampleItems.map((item) => `${item}, `)} etc. Go crazy.
+            {sampleItems.map((item) => `${item}, `)} etc.
           </Typography>
         </Box>
-
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <TextField
             size="small"
@@ -214,9 +219,31 @@ const Konvo: React.FunctionComponent = () => {
             error={formError && !formData.person2}
           />
         </Box>
-
+        <br /> <br />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: "3px",
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Topic (optional)
+          </Typography>
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <TextField
+            size="small"
+            onChange={(e) =>
+              setFormData({ ...formData, topic: e.target.value })
+            }
+            value={formData.topic}
+            label={"any topic"}
+            variant="filled"
+            error={formError && !formData.topic}
+          />
+        </Box>
         <br />
-
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <Button variant="contained" type="submit" sx={{ width: "250px" }}>
             GO !
