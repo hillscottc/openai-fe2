@@ -1,17 +1,18 @@
 import * as React from "react";
 import ChatBot from "./ChatBot";
-import Paper from "@mui/material/Paper";
 import CssBaseline from "@mui/material/CssBaseline";
 import Footer from "./components/Footer";
+import Container from "@mui/material/Container";
 
-export default function App() {
+const App: React.FunctionComponent = () => {
   return (
     <React.Fragment>
       <CssBaseline enableColorScheme />
-      <Paper elevation={8}>
+      <Container component="main">
         <ChatBot />
-      </Paper>
+      </Container>
       <Footer />
     </React.Fragment>
   );
-}
+};
+export default App;

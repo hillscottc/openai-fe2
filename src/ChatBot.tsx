@@ -91,13 +91,14 @@ function ChatBot() {
 
   return (
     <Paper
+      elevation={8}
       style={{
-        display: "grid",
-        gridRowGap: "20px",
-        padding: "1px",
-        margin: "1px",
+        // use sx?
+        display: "flex",
+        flexDirection: "column",
+        padding: "10px",
+        margin: "20px",
         backgroundColor: "#f0f0f0",
-        height: "100%",
       }}
     >
       <Typography variant="h2" margin="10px" border="10px">
