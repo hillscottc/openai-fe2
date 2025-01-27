@@ -11,9 +11,9 @@ import {
   RadioGroup,
   Radio,
   TextareaAutosize,
+  FormHelperText,
 } from "@mui/material";
-import { DNA } from "react-loader-spinner";
-import ChatIcon from "@mui/icons-material/Chat";
+import { DNA as DNASpinner } from "react-loader-spinner";
 
 const API_KEY = import.meta.env.VITE_OPENAI_APIKEY || "";
 
@@ -35,7 +35,14 @@ async function fetchChat({
   return response.choices[0]?.message?.content;
 }
 
-const chatTypes = ["discussion", "rap battle", "love ballad"];
+const chatTypes = [
+  "rap battle",
+  "love song",
+  "interview",
+  "debate",
+  "argument",
+  "comedy skit",
+];
 
 const sampleItems = [
   "Trump",
@@ -53,11 +60,11 @@ const sampleItems = [
   "Taylor Swift",
 ];
 
-function ChatBot() {
+const ChatBot: React.FunctionComponent = () => {
   const [formData, setFormData] = useState({
     person1: "",
     person2: "",
-    chatType: "discussion",
+    chatType: "",
   });
   const [chatResults, setChatResults] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -102,7 +109,7 @@ function ChatBot() {
       }}
     >
       <Typography variant="h1" margin="10px" border="10px">
-        <ChatIcon fontSize={"inherit"} /> ConvoComposer
+        ConvoComposer
       </Typography>
 
       <form onSubmit={handleSubmit}>
@@ -120,7 +127,7 @@ function ChatBot() {
               marginBottom: "50px",
             }}
           >
-            <FormControl>
+            <FormControl error={formError && !formData.chatType}>
               <RadioGroup
                 row
                 defaultValue={"discussion"}
@@ -139,6 +146,9 @@ function ChatBot() {
                   />
                 ))}
               </RadioGroup>
+              <FormHelperText>
+                {!formData.chatType && "Please select an option."}
+              </FormHelperText>
             </FormControl>
           </Box>
         </Box>
@@ -204,25 +214,22 @@ function ChatBot() {
       </form>
 
       {isLoading && (
-        <div className="container-grid">
-          <div className="col col-1">
-            {/* Loading spinner */}
-            <DNA
-              visible={isLoading}
-              height="80"
-              width="80"
-              ariaLabel="dna-loading"
-              wrapperStyle={{}}
-              wrapperClass="dna-wrapper"
-            />
-          </div>
-        </div>
+        <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <DNASpinner
+            visible={isLoading}
+            height="80"
+            width="80"
+            ariaLabel="dna-loading"
+            wrapperStyle={{}}
+            wrapperClass="dna-wrapper"
+          />
+        </Box>
       )}
 
       <br />
       {chatResults && <TextareaAutosize value={chatResults} readOnly />}
     </Paper>
   );
-}
+};
 
 export default ChatBot;
