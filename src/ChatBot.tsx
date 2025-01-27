@@ -10,6 +10,7 @@ import {
   FormControlLabel,
   RadioGroup,
   Radio,
+  TextareaAutosize,
 } from "@mui/material";
 import { DNA } from "react-loader-spinner";
 import ChatIcon from "@mui/icons-material/Chat";
@@ -97,6 +98,7 @@ function ChatBot() {
         margin: "10px",
         backgroundColor: "#f0f0f0",
         height: "100%",
+        // height: "100vh",
       }}
     >
       <Typography variant="h1" margin="10px" border="10px">
@@ -132,7 +134,7 @@ function ChatBot() {
                     value={value}
                     key={value}
                     control={<Radio />}
-                    label={<Typography variant="h6">{value}</Typography>}
+                    label={<Typography variant="h5">{value}</Typography>}
                     labelPlacement="bottom"
                   />
                 ))}
@@ -147,7 +149,7 @@ function ChatBot() {
             marginBottom: "3px",
           }}
         >
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h4" gutterBottom>
             Choose two people
           </Typography>
         </Box>
@@ -218,9 +220,7 @@ function ChatBot() {
       )}
 
       <br />
-      {chatResults && (
-        <textarea value={chatResults} rows={30} cols={75} readOnly />
-      )}
+      {chatResults && <TextareaAutosize value={chatResults} readOnly />}
     </Paper>
   );
 }
